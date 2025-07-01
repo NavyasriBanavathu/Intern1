@@ -1,0 +1,43 @@
+import pandas as pd
+
+url = "https://raw.githubusercontent.com/PhilippeCodes/World-Happiness-Report-Data-Analysis/master/World%20Happiness%20Report.csv"
+df = pd.read_csv(url)
+
+df.columns = df.columns.str.strip()
+
+print("\n First 5 rows:")
+print(df.head())
+
+print("\n Column names:")
+print(df.columns.tolist())
+
+print("\n Summary statistics:")
+print(df.describe())
+
+print("\n Dataset info:")
+print(df.info())
+
+print("\n Missing values in each column:")
+print(df.isnull().sum())
+
+country_col = 'Country or Region' if 'Country or Region' in df.columns else 'Country'
+score_col = 'Score' if 'Score' in df.columns else 'Happiness Score'
+year_col = 'Year' if 'Year' in df.columns else [col for col in df.columns if 'year' in col.lower()][0]
+
+
+print("\n Unique countries:", df[country_col].nunique())
+print(" Unique years:", df[year_col].nunique())
+
+print("\n Average Happiness Score by Year:")
+print(df.groupby(year_col)[score_col].mean())
+
+latest_year = df[year_col].max()
+top5 = df[df[year_col] == latest_year].sort_values(by=score_col, ascending=False).head(5)
+
+print(f"\n Top 5 Happiest Countries in {latest_year}:")
+print(top5[[country_col, score_col]])
+
+print("\n Correlation matrix:")
+print(df.corr(numeric_only=True))
+
+
